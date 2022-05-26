@@ -44,9 +44,11 @@ class Main {
         e.preventDefault(); 
         // create task div and add the todo div to the list
         const tasksToAdd = await this.itemManager.addTodoTask(this.newTaskText.value);
-        tasksToAdd.forEach( (task) => {
-            this.todoList.appendChild(this.createTaskDiv(task));
-        })
+        if(tasksToAdd){
+            tasksToAdd.forEach( (task) => {
+                this.todoList.appendChild(this.createTaskDiv(task));
+            })
+        }
         // erases text input
         this.newTaskText.value = "";
         this.calculatePending();
