@@ -1,10 +1,8 @@
-export class PokemonClient{
+class PokemonClient{
     constructor(){
         this.pokemonAPI = 'https://pokeapi.co/api/v2/pokemon';
         this.data = '';
     }
-
-    // test if ulpoad works
 
     getPokemonById = async (id) => {
         try{
@@ -63,3 +61,4 @@ export class PokemonClient{
     
 }
 
+module.exports = PokemonClient;
