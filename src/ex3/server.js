@@ -6,11 +6,8 @@ let pokemonClient = new PokemonClient();
 
 /* Add todo  function */
 addTodo = async (todo) => {
-    //console.log("todo = ", todo); // TEST
     const pokemon = await pokemonClient.getPokemonName(todo);
-    //console.log("pokemon = ",pokemon); // TEST
     const todoText = isPokemon(todo) ? `Catch ${pokemon}` : todo;
-    //console.log("todoText = ", todoText);
     try{
         fs.access('todos.txt', (err) => {
             if (err){ 
@@ -47,7 +44,6 @@ getTodos = () => {
 deleteTodo = (todo) => {
     console.log("todo=",todo);  // TEST
     const tasks = fs.readFileSync('todos.txt').toString().split('\n');
-    console.log("tasks before delete = ", tasks) // TEST
     if(todo){
         pos = parseInt(todo);
         if(pos>=0 && pos<=tasks.length-1){
@@ -60,7 +56,9 @@ deleteTodo = (todo) => {
         tasks.pop();
         fs.writeFileSync('todos.txt', tasks);
     }
-    console.log("tasks after delete = ",tasks); // TEST    
+    if(tasks.length === 0){
+        deleteAll();
+    } 
 }
 
 /* Deletes all the todos */
@@ -69,7 +67,7 @@ deleteAll = () => {
         if(err){
             console.log("There is no todos file");
         } else{
-            fs.writeFileSync('todos.txt', "");
+            fs.unlinkSync('todos.txt')
             console.log("All tasks deleted");
         }
     })
@@ -96,7 +94,7 @@ helpFunction = () => {
 handleCommand = () => {
     const commandInput = process.argv[2];
     const todo = process.argv[3];
-    console.log(typeof todo);
+
     switch(commandInput){
         case 'add':
             addTodo(todo);
