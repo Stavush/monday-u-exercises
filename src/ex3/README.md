@@ -1,6 +1,8 @@
 # Exercise 3 - Node.js, CLI
 
 Time for task #3!<br>
+## Preview ##
+![](https://github.com/Stavush/monday-u-exercises/blob/ex3/src/ex3/ex3.gif?raw=true)
 
 ## In this section you will practice
 
