@@ -26,10 +26,10 @@ export class ItemManager {
                 }
             } else{
                 // if there's more than 2 or pokemon ID(s)
-                const pokemonArr = await this.pokemonClient.getPokemonFromArray(arr);
+                const pokemonArr = await this.pokemonClient.getPokemonNameByIds(arr);
                 if(pokemonArr.length > 0){
                     for(const name of pokemonArr) {
-                        const type = await this.pokemonClient.getPokemonsType(name);
+                        const type = await this.pokemonClient.getPokemonsTypes(name);
                         this.tasks.push(`Catch ${name}, ${type} pokemon`);
                         tasksToRender.push(`Catch ${name}, ${type} pokemon`);
                     }
@@ -55,10 +55,19 @@ export class ItemManager {
 
     isPokemon(text){
         // helper function to determine wether an input contains pokemod id(s) or not
-        return text.match(/[0-9]+(,[0-9]+)*/gi);
+        if(text.match(/[0-9]+(,[0-9]+)*/gi)){
+            let pokemonIds = text.split(',');
+            for (const id in pokemonIds){
+                if(!this.pokemonClient.getPokemonById){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
-    isExist = (text) => {
+    isPokemonCaught = (text) => {
         // a function that checks whether the pokemon has already been added to the tasks
         return this.tasks.filter(task => task === text);
     }

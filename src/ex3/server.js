@@ -1,131 +1,56 @@
-//requires
-const fs = require('fs');
-const PokemonClient = require('./pokemonClient.js');
+// imports
+import {handleCommand} from "./commands.js";
+import inquirer from 'inquirer';
+import figlet from 'figlet';
+import gradient from 'gradient-string';
+import chalk from "chalk";
 
-let pokemonClient = new PokemonClient();
+const welcome = () => {
+    figlet("CLI Todo App", (err, txt) => {
+    console.log(gradient.pastel.multiline(txt));
+    console.log(chalk.yellowBright(`
+                    ⠸⣷⣦⠤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⠀⠀⠀
+                    ⠀⠙⣿⡄⠈⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠊⠉⣿⡿⠁⠀⠀⠀
+                    ⠀⠀⠈⠣⡀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠁⠀⠀⣰⠟⠀⠀⠀⣀⣀
+                    ⠀⠀⠀⠀⠈⠢⣄⠀⡈⠒⠊⠉⠁⠀⠈⠉⠑⠚⠀⠀⣀⠔⢊⣠⠤⠒⠊⠉⠀⡜
+                    ⠀⠀⠀⠀⠀⠀⠀⡽⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠩⡔⠊⠁⠀⠀⠀⠀⠀⠀⠇
+                    ⠀⠀⠀⠀⠀⠀⠀⡇⢠⡤⢄⠀⠀⠀⠀⠀⡠⢤⣄⠀⡇⠀⠀⠀⠀⠀⠀⠀⢰⠀
+                    ⠀⠀⠀⠀⠀⠀⢀⠇⠹⠿⠟⠀⠀⠤⠀⠀⠻⠿⠟⠀⣇⠀⠀⡀⠠⠄⠒⠊⠁⠀
+                    ⠀⠀⠀⠀⠀⠀⢸⣿⣿⡆⠀⠰⠤⠖⠦⠴⠀⢀⣶⣿⣿⠀⠙⢄⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠀⠀⢻⣿⠃⠀⠀⠀⠀⠀⠀⠀⠈⠿⡿⠛⢄⠀⠀⠱⣄⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠀⠀⢸⠈⠓⠦⠀⣀⣀⣀⠀⡠⠴⠊⠹⡞⣁⠤⠒⠉⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠀⣠⠃⠀⠀⠀⠀⡌⠉⠉⡤⠀⠀⠀⠀⢻⠿⠆⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠰⠁⡀⠀⠀⠀⠀⢸⠀⢰⠃⠀⠀⠀⢠⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⢶⣗⠧⡀⢳⠀⠀⠀⠀⢸⣀⣸⠀⠀⠀⢀⡜⠀⣸⢤⣶⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠈⠻⣿⣦⣈⣧⡀⠀⠀⢸⣿⣿⠀⠀⢀⣼⡀⣨⣿⡿⠁⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠈⠻⠿⠿⠓⠄⠤⠘⠉⠙⠤⢀⠾⠿⣿⠟⠋
+    `));
+})};
 
-/* Add todo  function */
-addTodo = async (todo) => {
-    const pokemon = await pokemonClient.getPokemonName(todo);
-    const todoText = isPokemon(todo) ? `Catch ${pokemon}` : todo;
-    try{
-        fs.access('todos.txt', (err) => {
-            if (err){ 
-                // if todos.txt doesn't exist then create it
-                fs.writeFileSync('todos.txt', todoText);
-            } else{
-                // else add todo to existiong file
-                try{
-                    fs.appendFileSync('todos.txt', `\n${todoText}`);
-                    console.log("New todo added successfully!");
-                } catch{
-                    console.log("Todo append failed");
-                }
-                let tasks = fs.readFileSync('todos.txt').toString().split('\n');
+
+const menu = async () =>{
+    const commandMenu = await inquirer.prompt([
+            { type: 'list', 
+            name: 'operation',
+            message:'What would you like to do?',
+            choices: [
+                'Add a task', 
+                'Get all pending tasks',
+                'Get all done tasks', 
+                'Check a task',
+                'Delete a task', 
+                'Delete all tasks', 
+                'Help menu'
+            ]},
+            {
+                type: 'input',
+                name: 'todo',
+                message: 'If you choice is add/delete/check task - please write your todo,  else press enter'
             }
-        })
-    } catch{
-        console.error("There was an error");
-    }
+        ]).then(async (ans) => {
+            await handleCommand(ans.operation, ans.todo);
+        });
 }
 
-/* Get all the todos in todos.json */
-getTodos = () => {
-    fs.access('todos.txt', (err) => {
-        if(err){
-            console.log("There is no todos file");
-        } else{
-            console.log(fs.readFileSync('todos.txt').toString());
-        }
-    })
-}
-
-/* Deletes the todo with id todo */
-deleteTodo = (todo) => {
-    console.log("todo=",todo);  // TEST
-    const tasks = fs.readFileSync('todos.txt').toString().split('\n');
-    if(todo){
-        pos = parseInt(todo);
-        if(pos>=0 && pos<=tasks.length-1){
-            tasks.splice(pos,1);
-            fs.writeFileSync('todos.txt', tasks.join('\n'));
-        } else {
-            console.log("Todo position doesn't exist");
-        }
-    } else{
-        tasks.pop();
-        fs.writeFileSync('todos.txt', tasks);
-    }
-    if(tasks.length === 0){
-        deleteAll();
-    } 
-}
-
-/* Deletes all the todos */
-deleteAll = () => {
-    fs.access('todos.txt', (err) => {
-        if(err){
-            console.log("There is no todos file");
-        } else{
-            fs.unlinkSync('todos.txt')
-            console.log("All tasks deleted");
-        }
-    })
-}
-
-/* Help menu */
-helpFunction = () => { 
-    const helpText = 
-    `Available operations are:
-
-  _________Operation____________|____________Command_______________
-                                |
-        Add a new todo          |  $ node server.js add "TODO"/#
-        Show all todos          |  $ node server.js get
-        Delete a todo           |  $ node server.js delete # 
-        Delete all the todos    |  $ node server.js deleteAll
-        Show help Menu          |  $ node server.js help
-        `; 
-    console.log(helpText);
-};
-
-
-/* A function that handles the input from command line */ 
-handleCommand = () => {
-    const commandInput = process.argv[2];
-    const todo = process.argv[3];
-
-    switch(commandInput){
-        case 'add':
-            addTodo(todo);
-            break;
-        case 'get':
-            getTodos();
-            break;
-        case 'delete':
-            deleteTodo(todo);
-            break;
-        case 'deleteAll':
-            deleteAll();
-            break;
-        case 'done':
-            completeTodo(todo);
-            break;
-        case 'help':
-            helpFunction();
-            break;
-        default:
-            if (commandInput){
-            console.log("No eligible command recieved");
-            }
-            
-    }
-}
-
-/* Helper function */
-isPokemon = (text) => {
-    // helper function to determine wether an input contains pokemod id(s) or not
-    return text.match(/[0-9]+(,[0-9]+)*/gi);
-}
-
-handleCommand();
+welcome();
+await menu();

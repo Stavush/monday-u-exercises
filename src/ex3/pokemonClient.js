@@ -1,42 +1,38 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-class PokemonClient{
+export class PokemonClient{
     constructor(){
-        this.pokemonAPI = 'https://pokeapi.co/api/v2/pokemon';
-        this.data = '';
+        this.API_URL = 'https://pokeapi.co/api/v2/pokemon';
     }
 
     getPokemonById = async (id) => {
         try{
-            const res = await fetch(`${this.pokemonAPI}/${id}`);
-            const data = await res.json();
-            return data;
+            const res = await fetch(`${this.API_URL}/${id}`);
+            return await res.json();
         } catch (err){
-            //console.log(`There is no pokemon with id ${id}`);
+            console.error(err);
         }
     }
 
     getPokemonByName = async (name) => {
         try{
-            const res = await fetch(`${this.pokemonAPI}/${name}`);
-            const data = await res.json();
-            return data;
+            const res = await fetch(`${this.API_URL}/${name}`);
+            return await res.json();
         } catch (err){
-            console.log(`There is no pokemon with the name ${name}`);
+            console.error(err);
         }
     }
 
     getPokemonName = async (id) => {
         try{
             const data = await this.getPokemonById(id);
-            const name = data.name;
-            return name;
+            return await data.name;
         } catch (err) {
-            //console.log("There is an error fetching the pokemon's name");
+            console.error(err);
         }
     }
 
-    getPokemonsType = async (name) => {
+    getPokemonsTypes = async (name) => {
         try{
             const data = await this.getPokemonByName(name);
             const types = await data.types;
@@ -44,22 +40,20 @@ class PokemonClient{
             return type.join(" & ");
         } 
         catch(err) {
-            console.log("There is an error fetching the pokemon's type");
+            console.error(err);
         }
     }
 
-    getPokemonFromArray = async (pokemonArray) => {
+    getPokemonNameByIds = async (pokemonIds) => {
         // gets an array of pokemons IDs and returns pokemons' names
-        this.names = [];
-        await Promise.all(pokemonArray.map(async (pokemon) => {
-            const pokemonName = await this.getPokemonName(pokemon);
-            if(pokemonName !== undefined){ 
-                this.names.push(pokemonName);
+        let names = [];
+        await Promise.all(pokemonIds.map(async (pokemonId) => {
+            const pokemonName = await this.getPokemonName(pokemonId);
+            if(pokemonName){ 
+                names.push(pokemonName);
             }
         }));
         return this.names;
     }
     
 }
-
-module.exports = PokemonClient;
