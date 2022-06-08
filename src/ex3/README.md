@@ -1,6 +1,9 @@
 # Exercise 3 - Node.js, CLI
 
 Time for task #3!<br>
+### My npm Package ###
+[https://www.npmjs.com/package/todo-app-stavush](https://www.npmjs.com/package/todo-app-stavush)
+
 ## Preview ##
 ![](https://github.com/Stavush/monday-u-exercises/blob/ex3/src/ex3/ex3.gif?raw=true)
 
