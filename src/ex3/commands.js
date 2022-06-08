@@ -51,6 +51,7 @@ const getTodos = () => {
         } else{
             console.log(chalk.underline.bgMagenta("All pending tasks"));
             console.log(chalk.magenta(fs.readFileSync('todos.txt').toString()));
+            console.log(chalk.bold.bgRedBright(`There are ${fetchQuantity('todos.txt')} pending tasks`))
         }
     })
 }
@@ -63,6 +64,7 @@ const getDoneTasks = () => {
         } else{
             console.log(chalk.underline.bgCyan("All done tasks:"))
             console.log(chalk.cyan(fs.readFileSync('done.txt').toString()));
+            console.log(chalk.bold.bgRedBright(`There are ${fetchQuantity('done.txt')} done tasks`))
         }
     })
 }
@@ -115,6 +117,12 @@ const fetchTask = (todoNum) => {
     return taskText;
 }
 
+/* Helper function that gets a txt file and returns the amount of todos */
+const fetchQuantity = (file) => {
+    let tasks = fs.readFileSync(file).toString().split('\n');
+    return tasks.length;
+}
+
 /* Function that checks tasks (transfers them trom todos.txt to done.txt) */
 const checkTodo = (todoNum = -1) => {
     let taskToCheck = fetchTask(todoNum);
@@ -127,6 +135,7 @@ const checkTodo = (todoNum = -1) => {
                 // else add todo to existing file
                 fs.appendFileSync('done.txt', `\n${taskToCheck}`);
                 let tasks = fs.readFileSync('done.txt').toString().split('\n');
+                console.log(chalk.bold.bgRedBright(`You've finished ${fetchQuantity('done.txt')} tasks, ${fetchQuantity('todos.txt')} more tasks to go...`))
             }       
         });
     deleteTodo(todoNum);
