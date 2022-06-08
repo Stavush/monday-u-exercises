@@ -14,7 +14,7 @@ const addTodo = async (todo) => {
     let message = '';
     if(itemManager.isPokemon(todo)){
         const pokemon = await pokemonClient.getPokemonName(todo);
-        const type = await pokemonClient.getPokemonsType(pokemon);
+        const type = await pokemonClient.getPokemonsTypes(pokemon);
         todoText =`Catch ${pokemon}, a ${type} pokemon`;
         message = `Catch ${chalk.bold(pokemon)}, a ${type} pokemon`;
     } else{

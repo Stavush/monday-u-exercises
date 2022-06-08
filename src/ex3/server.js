@@ -45,7 +45,7 @@ const menu = async () =>{
             {
                 type: 'input',
                 name: 'todo',
-                message: 'If you choice is add/delete/check task - please write your todo,  else press enter'
+                message: 'If you choice is add/delete/check task - please write your todo, else press enter'
             }
         ]).then(async (ans) => {
             await handleCommand(ans.operation, ans.todo);
