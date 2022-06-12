@@ -2,6 +2,7 @@ import { ItemManager } from "./itemManager.js";
 
 class Main {    
     constructor(){
+        this.tasks = [];
         this.itemManager = new ItemManager();
     }
 
