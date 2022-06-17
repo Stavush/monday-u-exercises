@@ -2,7 +2,7 @@
 This is what makes requests to your
  express server (your own custom API!)*/
 
- const axios = require('axios');
+ const axios = require('axios').default;
 
  const host = 'http://localhost';
  const PORT = 8080;
@@ -14,15 +14,25 @@ This is what makes requests to your
     }
 
     getTodos = async () => {
-      console.log("item client get todos is working...")
-      const response = await axios.get(this.URL)
-      console.log("itemClient get todos response", response);
-      return await response.json();
+      console.log("item client get todos is working..."); // test
+      try{
+        const res = await axios.get(this.URL);
+        console.log("itemClient get todos response", res.data);
+        return res.data;
+      } catch (err){
+        console.error("Could not fetch todos");
+      }
     }
 
     addTodo = async (task) => {
-      const response = await axios.post(this.URL, task);
-      return await response.json();
+      try{
+        console.log("URL:", this.URL); // TEST
+        const response = await axios.post(this.URL,{ task });
+        console.log({response}); // test
+        return await response.json();
+      } catch (err){
+        console.error("Could not create a todo item");
+      }
     }
 
     deleteTodo = async (taskId) => {

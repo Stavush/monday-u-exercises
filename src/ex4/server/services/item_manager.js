@@ -1,7 +1,7 @@
 // The ItemManager should go here. Remember that you have to export it.
 
 const PokemonClient = require("../clients/pokemon_client");
-const fs = require('fs').promises;
+const fs = require('fs');
 
 class ItemManager {
     constructor(){
@@ -10,10 +10,10 @@ class ItemManager {
 
     /* Add todo  function */
     addTodo = async (todo) => {
-        console.log({todo}); // TEST
+        console.log("todo.data=",todo.json()); // TEST
         let todoText = '';
         let message = '';
-        console.log('ENTERS addTodo'); //TEST
+        console.log('ENTERS item_manager addTodo'); //TEST
         if(this.isPokemon(todo)){
             console.log("This is pokemon") // TEST
             const pokemon = await pokemonClient.getPokemonName(todo);
