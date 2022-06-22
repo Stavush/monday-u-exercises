@@ -44,7 +44,7 @@ class Main {
     e.preventDefault();
     // create task div and add the todo div to the list
     const tasksToAdd = await this.itemClient.addTodo(this.newTaskText.value);
-    console.log("tasksToAdd:", tasksToAdd.body);
+    console.log({ tasksToAdd });
     if (tasksToAdd) {
       tasksToAdd.forEach((task) => {
         this.todoList.appendChild(this.createTaskDiv(task));

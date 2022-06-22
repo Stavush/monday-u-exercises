@@ -13,8 +13,8 @@ const addTodo = async (req, res) => {
   try {
     const { value } = req.body;
     if (value) {
-      const addedTask = await itemManager.addTodo(value);
-      console.log({ addedTask });
+      const addedTask = await (await itemManager.addTodo(value)).todoText;
+      console.log(addedTask);
       res.status(200).json(addedTask);
     }
   } catch (err) {

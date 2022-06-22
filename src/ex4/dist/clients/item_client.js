@@ -19,7 +19,6 @@ export default class ItemClient {
     console.log("item client get todos is working..."); // test
     try {
       const res = await fetch(this.URL);
-      console.log("itemClient get todos response", res.data);
       return await res.json();
     } catch (err) {
       console.error("Could not fetch todos");
@@ -28,14 +27,13 @@ export default class ItemClient {
 
   addTodo = async (task) => {
     try {
-      console.log("URL:", this.URL); // TEST
       const res = await fetch(this.URL, {
         method: "POST",
         headers: STANDARD_HEADERS,
         body: JSON.stringify({ value: task }),
       });
-      console.log("res: ", [res.json()]); // test
-      return await [res.json()];
+      console.log("res item client-", res);
+      return await res.json();
     } catch (err) {
       //console.error("Could not create a todo item");
       console.error(err);
