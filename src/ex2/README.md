@@ -9,6 +9,11 @@ Here we'll get your code to look a little more professional + modern, _and_ you'
 **Async JS** - Working with async code to retrieve data from a public API
 **MVC** - Basic design pattern for separating concerns
 
+
+## preview
+
+![](https://github.com/Stavush/monday-u-exercises/blob/ex2/src/ex2/ex2-gif.gif?raw=true)
+
 ## What you are going to build
 
 We already have a todo app where you can add your own tasks but... what about adding _pokemon_ related tasks?
