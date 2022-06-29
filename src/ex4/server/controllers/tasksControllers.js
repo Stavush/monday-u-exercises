@@ -25,7 +25,7 @@ const addTodo = async (req, res) => {
       res.end();
     }
   } catch (err) {
-    console.error(err);
+    console.error("There's a problem adding a todo");
   }
 };
 
@@ -50,9 +50,7 @@ const deleteTodo = async (req, res) => {
 
 /*const checkTodo = async (req, res) => {
   try{
-
   } catch{
-    
   }
 }*/
 
