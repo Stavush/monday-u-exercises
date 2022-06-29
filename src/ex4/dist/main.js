@@ -5,23 +5,28 @@ class Main {
     this.itemClient = new ItemClient();
   }
 
-  createTaskDiv = (task) => {
-    const taskDiv = document.createElement("div");
-    taskDiv.classList.add("task");
-    taskDiv.setAttribute("done", "false");
+  createTaskLi = (task, isDone) => {
+    const taskLi = document.createElement("li");
+    taskLi.classList.add("task");
+    if (!isDone) {
+      taskLi.setAttribute("done", "false");
+    } else {
+      taskLi.setAttribute("done", "true");
+    }
     // add checkbox to task
-    taskDiv.appendChild(this.addCheckbox());
+    taskLi.appendChild(this.addCheckbox());
     // add task's text
-    taskDiv.appendChild(this.addDivText(task));
+    taskLi.appendChild(this.addDivText(task));
     // add delete button
-    taskDiv.appendChild(this.addDeleteButton());
-    return taskDiv;
+    taskLi.appendChild(this.addDeleteButton(task));
+    return taskLi;
   };
 
   addCheckbox = () => {
     const check = document.createElement("button");
     check.classList.add("checkbox");
     check.innerHTML = '<i class="fa-solid fa-square"></i>';
+    //check.addEventListener("click", (_) => this.checkTask(task));
     return check;
   };
 
@@ -32,11 +37,26 @@ class Main {
     return todoTask;
   };
 
-  addDeleteButton = () => {
+  addDeleteButton = (task) => {
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("delete-btn");
     deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    deleteButton.addEventListener("click", (_) => this.deleteTask(task));
+
     return deleteButton;
+  };
+
+  renderTasks = async () => {
+    this.todoList.innerHTML = "";
+    const todos = await this.itemClient.getTodos();
+    //const done = await this.itemClient.getDone();
+    todos.forEach((todo) => {
+      this.todoList.appendChild(this.createTaskLi(todo, false));
+    });
+    /*done.forEach((task) => {
+      this.todoList.appendChild(this.createTaskLi(task, true));
+    });*/
+    this.calculatePending();
   };
 
   addTask = async (e) => {
@@ -44,18 +64,12 @@ class Main {
     e.preventDefault();
     // create task div and add the todo div to the list
     const tasksToAdd = await this.itemClient.addTodo(this.newTaskText.value);
-    console.log({ tasksToAdd });
-    if (tasksToAdd) {
-      tasksToAdd.forEach((task) => {
-        this.todoList.appendChild(this.createTaskDiv(task));
-      });
-    }
-    // erases text input
+
+    await this.renderTasks();
     this.newTaskText.value = "";
-    this.calculatePending();
   };
 
-  checkTask = (e) => {
+  /*checkTask = async (e, todo) => {
     // function that contains the logic of checking tasks
     const checkbox = e.target;
     const task = checkbox.parentElement.parentElement;
@@ -76,19 +90,14 @@ class Main {
         task.style.textDecoration = "none";
         task.setAttribute("done", "false");
       }
-      this.calculatePending();
     }
-  };
+    await this.renderTasks();
+  };*/
 
-  deleteTask = (e) => {
+  deleteTask = async (task) => {
     // function that deletes a task
-    const task = e.target.parentElement;
-    if (task.classList[0] === "delete-btn") {
-      const todoText = e.target.parentElement.parentElement.innerText;
-      this.itemClient.deleteTodo(todoText);
-      task.parentElement.remove();
-    }
-    this.calculatePending();
+    await this.itemClient.deleteTodo(task);
+    await this.renderTasks();
   };
 
   handleTabs = (e) => {
@@ -143,14 +152,13 @@ class Main {
     pending.innerText = `There are ${numberOfPending} / ${total} pending tasks`;
   };
 
-  clearAll = () => {
+  clearAll = async () => {
     // function that clears all the tasks
-    this.itemClient.deleteAll();
-    this.todoList.innerHTML = "";
-    this.calculatePending();
+    await this.itemClient.deleteAll();
+    await this.renderTasks();
   };
 
-  init = () => {
+  init = async () => {
     //selectors
     this.todoList = document.querySelector(".todo-list");
     this.newTaskText = document.querySelector(".new-task-text");
@@ -166,20 +174,20 @@ class Main {
     this.addTodoTask.addEventListener("click", this.addTask);
     this.todoList.addEventListener("click", (e) => {
       this.deleteTask(e);
-      this.checkTask(e);
       if (e.target.classList[0] === "todo-text") {
         const taskText = e.target.childNodes[0].nodeValue;
+        /*this.checkTask(e, taskText);
         if (taskText) {
           window.alert(taskText + " was chosen");
         } else {
           window.alert("Empty task was chosen");
-        }
+        }*/
       }
     });
     tabs.addEventListener("click", main.handleTabs);
-    this.clearAllButton.addEventListener("click", main.clearAll);
+    this.clearAllButton.addEventListener("click", this.clearAll);
 
-    this.calculatePending();
+    await this.renderTasks();
   };
 }
 

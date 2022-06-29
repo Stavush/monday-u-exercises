@@ -8,13 +8,13 @@ class ItemManager {
   constructor() {
     this.pokemonClient = new PokemonClient();
     this.todos = [];
+    this.done = [];
   }
 
   /* Add todo  function */
   addTodo = async (todo) => {
     const pokemonIds = todo.replace(" ", "").split(",");
     let todoText = [];
-    let message = "";
     if (this.isPokemon(todo)) {
       const pokemons = await this.pokemonClient.getPokemonsByIds(pokemonIds);
       pokemons.map(async (pokemon) => {
@@ -27,98 +27,38 @@ class ItemManager {
       todoText.push(todo);
       this.todos.push(todo);
     }
-    try {
-      fs.access("todos.txt", (err) => {
-        if (err) {
-          // if todos.txt doesn't exist then create it
-          todoText.forEach((todo) =>
-            fs.appendFileSync("todos.txt", `${todo}\n`)
-          );
-        } else {
-          // else add todo to existing file
-          try {
-            todoText.forEach((todo) =>
-              fs.appendFileSync("todos.txt", `${todo}\n`)
-            );
-          } catch {
-            console.error(err);
-          }
-          let tasks = fs.readFileSync("todos.txt").toString().split("\n");
-        }
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
     return { todoText };
   };
 
-  /* Get all the todos in todos.json */
+  /* Get all the todos */
   getTodos = () => {
-    console.log(this.todos);
     return this.todos;
   };
 
+  /* Get all the done todos */
+  getDone = () => {
+    return this.done;
+  };
+
   /* Deletes the todo with id todo */
-  deleteTodo = (todoId) => {
-    fs.access("todos.txt", (err) => {
-      if (err) {
-        console.log("There are no tasks to delete");
-      } else {
-        const tasks = fs.readFileSync("todos.txt").toString().split("\n");
-        if (todoId) {
-          if (todoId >= 0 && todoId <= tasks.length - 1) {
-            tasks.splice(todoId, 1);
-            this.todos.splice(todoId, 1);
-            fs.writeFileSync("todos.txt", tasks.join("\n"));
-          } else {
-            console.log("Todo position doesn't exist");
-          }
-        } else {
-          tasks.pop();
-          fs.writeFileSync("todos.txt", tasks.join("\n"));
-        }
-        if (tasks.length === 0 || (tasks.length === 1 && !tasks[0])) {
-          this.deleteAll();
-        }
-        //console.log(`Todo deleted successfully`);
-      }
-    });
+  deleteTodo = (task) => {
+    this.todos = this.todos.filter((todo) => todo !== task);
   };
 
   /* Deletes all the todos */
   deleteAll = () => {
-    fs.access("todos.txt", (err) => {
-      if (err) {
-        console.log("There is no todos file");
-      } else {
-        const deleted = fs.unlinkSync("todos.txt");
-        this.todos = [];
-        console.log("All tasks deleted");
-        return { deleted };
-      }
-    });
+    this.todos = [];
   };
 
-  /* Helper function that fetches a specific task from todos.txt */
-  fetchTask = (todoNum) => {
-    const tasks = fs.readFileSync("todos.txt").toString().split("\n");
-    let taskText = "";
-    if (todoNum) {
-      let pos = parseInt(todoNum);
-      if (pos >= 0 && pos <= tasks.length - 1) {
-        taskText = tasks[pos];
-      }
-    } else {
-      taskText = tasks[-1];
-    }
-    return taskText;
-  };
+  /* Checks a done task */
+  /*checkTask = (task) => {
+    this.done.push(task);
+    this.deleteTodo(task);
+  };*/
 
-  /* Helper function that gets a txt file and returns the amount of todos */
-  fetchQuantity = (file) => {
-    let tasks = fs.readFileSync(file).toString().split("\n");
-    return tasks.length;
+  /* Helper function that returns the amount of todos */
+  fetchQuantity = () => {
+    return this.todos.length;
   };
 
   isPokemon(text) {

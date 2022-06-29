@@ -9,24 +9,30 @@ const getTodos = async (req, res) => {
   }
 };
 
+const getDone = async (req, res) => {
+  try {
+    res.send(itemManager.getDone());
+  } catch (err) {
+    console.error("There's a problem with fetching the done tasks");
+  }
+};
+
 const addTodo = async (req, res) => {
   try {
     const { value } = req.body;
     if (value) {
       const addedTask = await (await itemManager.addTodo(value)).todoText;
-      console.log(addedTask);
-      res.status(200).json(addedTask);
+      res.end();
     }
   } catch (err) {
     console.error(err);
-    //console.error("There was a problem adding a todo");
   }
 };
 
 const deleteAll = async (req, res) => {
   try {
     const deleted = await itemManager.deleteAll();
-    res.status(200).json({ deleted });
+    res.end();
   } catch (err) {
     console.error("There's a problem with deleting the todos");
   }
@@ -34,18 +40,20 @@ const deleteAll = async (req, res) => {
 
 const deleteTodo = async (req, res) => {
   try {
-    //console.log("controllers -deleteTodo req.params", req.params);
-    const taskId = await parseInt(req.params.id);
-    if (isNaN(taskId))
-      return res.status(400).json({
-        status: 400,
-        error: "wrong parameters",
-      });
-    const taskDeleted = await itemManager.deleteTodo(taskId);
-    res.status(200).json({ taskDeleted });
+    const task = req.body.task;
+    itemManager.deleteTodo(task);
+    res.end();
   } catch (err) {
     console.error("There's a problem with deleting the todo");
   }
 };
 
-module.exports = { getTodos, addTodo, deleteTodo, deleteAll };
+/*const checkTodo = async (req, res) => {
+  try{
+
+  } catch{
+    
+  }
+}*/
+
+module.exports = { getTodos, getDone, addTodo, deleteTodo, deleteAll };

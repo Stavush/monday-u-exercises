@@ -1,13 +1,22 @@
 // Define your endpoints here (this is your "controller file")
-const express = require('express');
+const express = require("express");
 
-const { getTodos, addTodo, deleteTodo, deleteAll } = require("../controllers/tasksControllers.js");
+const {
+  getTodos,
+  getDone,
+  addTodo,
+  deleteTodo,
+  deleteAll,
+  checkTodo,
+} = require("../controllers/tasksControllers.js");
 
 const tasksRouter = express.Router();
 
-tasksRouter.get('/', getTodos);
-tasksRouter.post('/', addTodo);
-tasksRouter.delete('/:id', deleteTodo);
-tasksRouter.delete('/all', deleteAll);
+tasksRouter.get("/", getTodos);
+tasksRouter.get("/", getDone);
+tasksRouter.post("/", addTodo);
+tasksRouter.delete("/", deleteTodo);
+tasksRouter.delete("/all", deleteAll);
+//tasksRouter.put("/", checkTodo);
 
-module.exports =  tasksRouter;
+module.exports = tasksRouter;

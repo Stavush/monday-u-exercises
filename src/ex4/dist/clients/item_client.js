@@ -16,12 +16,20 @@ export default class ItemClient {
   }
 
   getTodos = async () => {
-    console.log("item client get todos is working..."); // test
     try {
       const res = await fetch(this.URL);
       return await res.json();
     } catch (err) {
       console.error("Could not fetch todos");
+    }
+  };
+
+  getDone = async () => {
+    try {
+      const res = await fetch(this.URL);
+      return await res.json();
+    } catch (err) {
+      console.error("Could not fetch done tasks");
     }
   };
 
@@ -32,21 +40,17 @@ export default class ItemClient {
         headers: STANDARD_HEADERS,
         body: JSON.stringify({ value: task }),
       });
-      console.log("res item client-", res);
-      return await res.json();
     } catch (err) {
-      //console.error("Could not create a todo item");
-      console.error(err);
+      console.error("Could not create a todo item");
     }
   };
 
-  deleteTodo = async (taskId) => {
-    const res = await fetch(`${this.URL}/${taskId}`, {
+  deleteTodo = async (task) => {
+    const res = await fetch(`${this.URL}`, {
       method: "DELETE",
       headers: STANDARD_HEADERS,
-      body: JSON.stringify({ taskId }),
+      body: JSON.stringify({ task }),
     });
-    return await res;
   };
 
   deleteAll = async () => {
@@ -55,9 +59,16 @@ export default class ItemClient {
         method: "DELETE",
         headers: STANDARD_HEADERS,
       });
-      return await res.json();
     } catch (err) {
       console.log(err);
     }
   };
+
+  /*checkTodo = async (task) => {
+    const res = await fetch(`${this.URL}`, {
+      method: "PUT",
+      headers: STANDARD_HEADERS,
+      body: JSON.stringify({ task }),
+    });)
+  }*/
 }
