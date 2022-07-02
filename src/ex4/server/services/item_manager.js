@@ -1,4 +1,7 @@
 const PokemonClient = require("../clients/pokemon_client");
+const getPokemonsTypes = require("../utils/getPokemonTypes.js");
+const _isNumber = require("../utils/isNumber.js");
+const _isList = require("../utils/isList.js");
 const { Item } = require("../db/models/item");
 
 class ItemManager {
@@ -6,50 +9,54 @@ class ItemManager {
     this.pokemonClient = new PokemonClient();
   }
 
-  getItems = () => {
+  getItems = async () => {
     try {
-      return Item.findAll();
+      const todos = await Item.findAll({
+        raw: true,
+      });
+      return todos.map((item) => {
+        return {
+          id: item.id,
+          itemName: item.itemName,
+          status: item.status,
+        };
+      });
     } catch (err) {
-      console.error(err);
+      console.error("There's a problem getting the items from the DB");
     }
   };
 
   handleItem = async (item) => {
     console.log("item manager - handleItem", item);
-    if (this._isNumber(item)) {
+    if (_isNumber(item)) {
       return await this.fetchAndAddPokemon(item);
     }
-    if (this._isList(item)) {
+    if (_isList(item)) {
       return await this.fetchAndAddManyPokemon(item);
     }
 
-    this.addItem(item);
+    await this.addItem(item);
   };
 
-  addItem = (item) => {
+  addItem = async (item) => {
     try {
       console.log("item manager - add item:", { item });
-      Item.create({
-        id: id,
-        ItemName: item,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+      await Item.create({
+        id: item.id,
+        itemName: item.itemName,
+        status: false,
       });
     } catch (err) {
-      console.error(err);
+      console.error("There's a problem adding an item to the DB");
     }
   };
 
   addPokemonItem = async (pokemon) => {
     try {
-      await Item.create({
-        id: id,
-        ItemName: `Catch ${pokemon.name}`,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      const item = `Catch ${pokemon.name}, a ${this.getPokemonsTypes(pokemon)}`;
+      await this.addItem(item);
     } catch (err) {
-      console.error(err);
+      console.error("There's a problem adding a pokemon to the DB");
     }
   };
 
@@ -74,16 +81,21 @@ class ItemManager {
     }
   };
 
-  deleteItem = (item) => {
+  deleteItem = async (item) => {
     try {
-      Item.destroy({ where: { id: item } });
+      await Item.destroy({ where: { id: item.id } });
     } catch (err) {
       console.error(err);
     }
   };
 
-  _isNumber = (value) => !isNaN(Number(value));
-  _isList = (value) => value.split(",").every(this._isNumber);
+  deleteAll = () => {
+    try {
+      Item.destroy({ where: {}, truncate: true });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
-module.exports = new ItemManager();
+module.exports = ItemManager;
