@@ -1,25 +1,33 @@
-import { useState } from "react";
+//import { useState } from "react";
 import ItemClient from "../api/item_client";
+import PropTypes from "prop-types";
 
 const itemClient = new ItemClient();
 
-const ListItem = (item) => {
-  const itemName = "Item";
-  const [done, setDone] = useState(false);
+const ListItem = (props) => {
+  const { itemID, itemName, done } = props;
 
   const deleteItem = async () => {
-    await itemClient.deleteItem(item.id);
-    console.log(`Deleted todo #${item.id}`);
+    await itemClient.deleteItem(itemID);
   };
 
   const checkItem = async () => {
-    await itemClient.toggleDone(item);
-    !done ? setDone(true) : setDone(false);
-    console.log(`item #${item.id} is changed to ${done}`);
+    const checked = !done;
+    try {
+      await itemClient.toggleDone({ itemID, itemName, checked });
+    } catch (err) {
+      console.error("Could not check item");
+    }
   };
 
   return (
-    <li className="list-item" itemId={item.id} itemName={itemName} done={done}>
+    <li
+      className="list-item"
+      itemID={itemID}
+      key={itemID}
+      itemName={itemName}
+      done={done}
+    >
       <input type="checkbox" onChange={checkItem}></input>
       {itemName}
       <button className="list-item-delete-button" onClick={deleteItem}>
@@ -30,6 +38,12 @@ const ListItem = (item) => {
       </button>
     </li>
   );
+};
+
+ListItem.prototypes = {
+  itemID: PropTypes.number,
+  itemName: PropTypes.string,
+  done: PropTypes.bool,
 };
 
 export default ListItem;

@@ -13,7 +13,7 @@ class ItemManager {
     return items.map((item) => {
       return {
         id: item.id,
-        name: item.itemName,
+        itemName: item.itemName,
         status: item.status,
       };
     });
@@ -35,7 +35,7 @@ class ItemManager {
   };
 
   addItem = async (item) => {
-    await Item.create({ itemName: item });
+    await Item.create({ itemName: item, status: false });
   };
 
   addPokemonItem = async (pokemon) => {
@@ -65,11 +65,18 @@ class ItemManager {
     }
   };
 
-  deleteItem = async (item) => {
+  deleteItem = async (itemId) => {
     await Item.destroy({
       where: {
-        id: item.id,
+        id: itemId,
       },
+    });
+  };
+
+  deleteAll = async () => {
+    await Item.destroy({
+      where: {},
+      truncate: true,
     });
   };
 

@@ -8,32 +8,56 @@ const TodoPad = () => {
   const [todoList, setTodoList] = useState([]);
   const [pending, setPending] = useState(0);
 
-  const newTodo = async () => {
-    const input = document.getElementById("list-item-input");
-    const inputValue = input.value;
-
-    await itemClient.postItem({ inputValue });
+  const newTodo = async (item) => {
+    try {
+      const input = document.getElementById("list-item-input");
+      const item = input.value;
+      await itemClient.postItem(item);
+      setPending(todoList.length);
+    } catch (err) {
+      console.error("Adding a todo was unsuccessful");
+    }
   };
 
   const getTodos = async () => {
-    const todos = await itemClient.getItems();
-    setTodoList(todos);
-    console.log("got the todos");
+    try {
+      const todos = await itemClient.getItems();
+      setTodoList(todos);
+    } catch (err) {
+      console.error("Fetching todos for TodoPad was unsuccessful");
+    }
   };
 
-  const deleteAll = () => {
-    console.log("deleted all tasks");
+  const clearAll = async () => {
+    try {
+      await itemClient.deleteAll();
+    } catch (err) {
+      console.error("Could not delete all items");
+    }
   };
+
+  const handleTabs = () => {};
 
   useEffect(() => {
     getTodos();
-  });
+  }, []);
 
   return (
-    <div class="app-container">
-      <div class="list-container">
-        <h1 class="app-name">Todo App</h1>
-        <div class="list-controls">
+    <div className="app-container">
+      <div className="list-container">
+        <h1 className="app-name">Todo App</h1>
+        <div id="tabs">
+          <button className="tab" id="all-tasks" onClick={handleTabs}>
+            All Tasks
+          </button>
+          <button className="tab" id="done" onClick={handleTabs}>
+            Done
+          </button>
+          <button className="tab" id="not-done" onClick={handleTabs}>
+            Not Done
+          </button>
+        </div>
+        <div className="list-controls">
           <input
             type="text"
             id="list-item-input"
@@ -44,11 +68,11 @@ const TodoPad = () => {
           </button>
         </div>
         <List todos={todoList} />
-        <div class="bottom-container">
+        <div className="bottom-container">
           <div id="pending">
             {`There are ${pending}/${todoList.length} pending tasks`}
           </div>
-          <button id="clear-all" onClick={deleteAll}>
+          <button id="clear-all" onClick={clearAll}>
             Clear all
           </button>
         </div>
