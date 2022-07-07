@@ -1,20 +1,24 @@
 //import { useState } from "react";
 import ItemClient from "../api/item_client";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const itemClient = new ItemClient();
 
 const ListItem = (props) => {
   const { itemID, itemName, done } = props;
+  const [status, setStatus] = useState(done);
 
   const deleteItem = async () => {
     await itemClient.deleteItem(itemID);
   };
 
   const checkItem = async () => {
-    const checked = !done;
+    setStatus(!status, [status]);
+    const id = itemID;
+    console.log({ status });
     try {
-      await itemClient.toggleDone({ itemID, itemName, checked });
+      await itemClient.toggleDone({ id, status });
     } catch (err) {
       console.error("Could not check item");
     }

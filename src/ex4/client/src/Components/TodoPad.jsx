@@ -1,19 +1,17 @@
 import List from "./List.jsx";
 import ItemClient from "../api/item_client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const itemClient = new ItemClient();
 
 const TodoPad = () => {
   const [todoList, setTodoList] = useState([]);
-  const [pending, setPending] = useState(0);
 
   const newTodo = async (item) => {
     try {
       const input = document.getElementById("list-item-input");
       const item = input.value;
       await itemClient.postItem(item);
-      setPending(todoList.length);
     } catch (err) {
       console.error("Adding a todo was unsuccessful");
     }
@@ -36,27 +34,14 @@ const TodoPad = () => {
     }
   };
 
-  const handleTabs = () => {};
-
   useEffect(() => {
     getTodos();
-  }, []);
+  }, [todoList]);
 
   return (
     <div className="app-container">
       <div className="list-container">
         <h1 className="app-name">Todo App</h1>
-        <div id="tabs">
-          <button className="tab" id="all-tasks" onClick={handleTabs}>
-            All Tasks
-          </button>
-          <button className="tab" id="done" onClick={handleTabs}>
-            Done
-          </button>
-          <button className="tab" id="not-done" onClick={handleTabs}>
-            Not Done
-          </button>
-        </div>
         <div className="list-controls">
           <input
             type="text"
@@ -70,7 +55,7 @@ const TodoPad = () => {
         <List todos={todoList} />
         <div className="bottom-container">
           <div id="pending">
-            {`There are ${pending}/${todoList.length} pending tasks`}
+            {`There are ${todoList.length} tasks in total`}
           </div>
           <button id="clear-all" onClick={clearAll}>
             Clear all

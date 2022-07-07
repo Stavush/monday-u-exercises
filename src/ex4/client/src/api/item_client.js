@@ -18,6 +18,7 @@ export default class ItemClient {
   };
 
   toggleDone = async (item) => {
+    console.log({ item });
     await fetch(`${BASE_URL}/item/${item.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
