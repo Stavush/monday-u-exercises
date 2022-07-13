@@ -1,70 +1,102 @@
-// The ItemManager should go here. Remember that you have to export it.
 
 const PokemonClient = require("../clients/pokemon_client");
 const getPokemonsTypes = require("../utils/getPokemonTypes.js");
-const fs = require("fs");
+const _isNumber = require("../utils/isNumber.js");
+const _isList = require("../utils/isList.js");
+const { Item } = require("../db/models/item");
 
 class ItemManager {
   constructor() {
     this.pokemonClient = new PokemonClient();
-    this.todos = [];
-    this.done = [];
   }
 
-  /* Add todo  function */
-  addTodo = async (todo) => {
-    const pokemonIds = todo.replace(" ", "").split(",");
-    let todoText = [];
-    if (this.isPokemon(todo)) {
-      const pokemons = await this.pokemonClient.getPokemonsByIds(pokemonIds);
-      pokemons.map(async (pokemon) => {
-        const name = await pokemon.name;
-        const types = await getPokemonsTypes(pokemon);
-        todoText.push(`Catch ${name}, a ${types} pokemon`);
-        this.todos.push(`Catch ${name}, a ${types} pokemon`);
+  getItems = async () => {
+    try {
+      const todos = await Item.findAll({
+        raw: true,
       });
-    } else {
-      todoText.push(todo);
-      this.todos.push(todo);
+      return todos.map((item) => {
+        return {
+          id: item.id,
+          itemName: item.itemName,
+          status: item.status,
+        };
+      });
+    } catch (err) {
+      console.error("There's a problem getting the items from the DB");
     }
-    return { todoText };
   };
 
-  /* Get all the todos */
-  getTodos = () => {
-    return this.todos;
+  handleItem = async (item) => {
+    console.log("item manager - handleItem", item);
+    if (_isNumber(item)) {
+      return await this.fetchAndAddPokemon(item);
+    }
+    if (_isList(item)) {
+      return await this.fetchAndAddManyPokemon(item);
+    }
+
+    await this.addItem(item);
   };
 
-  /* Get all the done todos */
-  getDone = () => {
-    return this.done;
+  addItem = async (item) => {
+    try {
+      console.log("item manager - add item:", { item });
+      await Item.create({
+        id: item.id,
+        itemName: item.itemName,
+        status: false,
+      });
+    } catch (err) {
+      console.error("There's a problem adding an item to the DB");
+    }
   };
 
-  /* Deletes the todo with id todo */
-  deleteTodo = (task) => {
-    this.todos = this.todos.filter((todo) => todo !== task);
+  addPokemonItem = async (pokemon) => {
+    try {
+      const item = `Catch ${pokemon.name}, a ${this.getPokemonsTypes(pokemon)}`;
+      await this.addItem(item);
+    } catch (err) {
+      console.error("There's a problem adding a pokemon to the DB");
+    }
   };
 
-  /* Deletes all the todos */
+  fetchAndAddPokemon = async (pokemonId) => {
+    try {
+      const pokemon = await this.pokemonClient.getPokemon(pokemonId);
+      this.addPokemonItem(pokemon);
+    } catch (error) {
+      this.addItem(`Pokemon with ID ${pokemonId} was not found`);
+    }
+  };
+
+  fetchAndAddManyPokemon = async (inputValue) => {
+    try {
+      const pokemons = await this.pokemonClient.getManyPokemon(
+        inputValue.replace("/ /g", "").split(",")
+      );
+      pokemons.forEach(this.addPokemonItem);
+    } catch (error) {
+      console.error(error);
+      this.addItem(`Failed to fetch pokemon with this input: ${inputValue}`);
+    }
+  };
+
+  deleteItem = async (item) => {
+    try {
+      await Item.destroy({ where: { id: item.id } });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   deleteAll = () => {
-    this.todos = [];
+    try {
+      Item.destroy({ where: {}, truncate: true });
+    } catch (err) {
+      console.error(err);
+    }
   };
-
-  /* Checks a done task */
-  /*checkTask = (task) => {
-    this.done.push(task);
-    this.deleteTodo(task);
-  };*/
-
-  /* Helper function that returns the amount of todos */
-  fetchQuantity = () => {
-    return this.todos.length;
-  };
-
-  isPokemon(text) {
-    // helper function to determine wether an input contains pokemod id(s) or not
-    return text.match(/[0-9]+(,[0-9]+)*/gi);
-  }
 }
 
 module.exports = ItemManager;

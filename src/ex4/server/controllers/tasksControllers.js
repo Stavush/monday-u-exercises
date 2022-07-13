@@ -3,25 +3,21 @@ const itemManager = new ItemManager();
 
 const getTodos = async (req, res) => {
   try {
-    res.send(itemManager.getTodos());
+    const todos = await itemManager.getItems();
+    console.log("todos", todos.json()); // TEST
+    res.send(todos.json());
   } catch (err) {
     console.error("There's a problem with fetching the todos");
   }
 };
 
-const getDone = async (req, res) => {
-  try {
-    res.send(itemManager.getDone());
-  } catch (err) {
-    console.error("There's a problem with fetching the done tasks");
-  }
-};
-
 const addTodo = async (req, res) => {
   try {
-    const { value } = req.body;
+    //const { value } = req.body;
+    const value = req.body.item;
+    console.log("taskController addTodo value:", value);
     if (value) {
-      const addedTask = await (await itemManager.addTodo(value)).todoText;
+      await itemManager.handleItem(value);
       res.end();
     }
   } catch (err) {
@@ -31,7 +27,7 @@ const addTodo = async (req, res) => {
 
 const deleteAll = async (req, res) => {
   try {
-    const deleted = await itemManager.deleteAll();
+    await itemManager.deleteAll();
     res.end();
   } catch (err) {
     console.error("There's a problem with deleting the todos");
@@ -40,8 +36,9 @@ const deleteAll = async (req, res) => {
 
 const deleteTodo = async (req, res) => {
   try {
-    const task = req.body.task;
-    itemManager.deleteTodo(task);
+    //const task = req.body.task;
+    const task = req.body.item;
+    itemManager.deleteItem(task);
     res.end();
   } catch (err) {
     console.error("There's a problem with deleting the todo");
@@ -54,4 +51,5 @@ const deleteTodo = async (req, res) => {
   }
 }*/
 
-module.exports = { getTodos, getDone, addTodo, deleteTodo, deleteAll };
+module.exports = { getTodos, addTodo, deleteTodo, deleteAll };
+

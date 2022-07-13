@@ -1,24 +1,27 @@
-*{
+
+* {
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   border-radius: 5px;
-  font-family: 'Cabin', sans-serif;
+
+  font-family: "Cabin", sans-serif;
 }
 
-body{
-  background: #9796f0;  /* fallback for old browsers */
+body {
+  background: #9796f0; /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #fbc7d4, #9796f0);
   background: linear-gradient(to right, #fbc7d4, #9796f0);
-  color: #FFF;
+  color: #fff;
 }
 
-#container{
+#container {
   margin: auto;
   border-radius: 10px;
-  background-color: #FFF;
+  background-color: #fff;
   width: 50vw;
-  height:70vh;
+  height: 70vh;
   min-height: 420px;
   min-width: 350px;
   max-width: 500px;
@@ -26,20 +29,21 @@ body{
   margin-top: 5%;
 }
 
-h1{
+
+h1 {
   font-size: 2rem;
   color: #8c7ae6;
   margin-bottom: 10px;
   text-align: center;
 }
 
-form{
+
+form {
   display: flex;
   flex: 1;
   padding: 0;
   margin-bottom: 5px;
 }
-
 
 input{
   font-family: 'Cabin', sans-serif;
@@ -52,54 +56,62 @@ input{
   font-size: 1rem;
 }
 
+
 button{
   cursor: pointer;
   border: none;
   font-size: 1rem;
   background-color: #fbc7d4;
-  color: #FFF;
+  color: #fff;
   padding: 5px;
 }
 
-button:active{
+button:active {
   transform: translateY(2px);
 }
 
-#tabs{
+#tabs {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
   width: 100%;
 }
 
-.tab{
-  width:32%;
-  background-image: linear-gradient(to right, #9796f0 0%, #D6A4A4  51%, #DAE2F8  100%);
+
+.tab {
+  width: 32%;
+  background-image: linear-gradient(
+    to right,
+    #9796f0 0%,
+    #d6a4a4 51%,
+    #dae2f8 100%
+  );
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color: white;            
+  color: white;
   box-shadow: 0 0 20px #eee;
 }
 
-.tab:hover{
+.tab:hover {
   background-position: right center; /* change the direction of the change here */
   color: #fff;
   text-decoration: none;
 }
 
-
-#done, #not-done{
+#done,
+#not-done {
   opacity: 0.5;
 }
 
-.add-task{
+.add-task {
   border: 0;
-  font-size:1rem;
+  font-size: 1rem;
   background-color: #8c7ae6;
 }
 
-.todo-list{
+.todo-list {
+
   overflow: auto;
   height: 70%;
 }
@@ -109,7 +121,7 @@ button:active{
   flex: 0;
   font-size: 1rem;
   background-color: #fbc7d4;
-  color: #FFF;
+  color: #fff;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   height: fit-content;
   padding: 3px;
@@ -128,12 +140,15 @@ button:active{
   }
 }
 
-.task:hover, button:hover{
+
+.task:hover,
+button:hover {
   background-color: #f9bbcb;
   cursor: pointer;
 }
 
-.todo-text{
+
+.todo-text {
   width: 100%;
   margin-left: 10px;
 }
@@ -146,6 +161,7 @@ button:active{
   justify-content: space-between;
 }
 
+
 #pending{
   background-color: #8c7ae6;
   width: fit-content;
@@ -153,11 +169,13 @@ button:active{
   padding: 5px;
 }
 
+
 #clear-all{
   padding: 5px;
   background-color: #8c7ae6;
 }
 
-#clear-all:hover{
+
+#clear-all:hover {
   background-color: red;
 }

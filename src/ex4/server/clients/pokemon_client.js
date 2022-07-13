@@ -1,4 +1,3 @@
-// The Pokemon Client (using axios) goes here
 
 const axios = require("axios").default;
 
