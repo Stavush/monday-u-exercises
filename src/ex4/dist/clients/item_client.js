@@ -1,10 +1,16 @@
+
 const host = "http://localhost";
 const PORT = 3042;
+
+const host = "http://localhost";
+const PORT = 8080;
+
 const path = "task";
 const STANDARD_HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",
 };
+
 
 export class ItemClient {
   constructor() {
@@ -20,6 +26,7 @@ export class ItemClient {
     }
   };
 
+
   /*getDone = async () => {
     try {
       const res = await fetch(this.URL);
@@ -30,11 +37,17 @@ export class ItemClient {
   };*/
 
   addTodo = async (item) => {
+=======
+  };
+
+  addTodo = async (task) => {
+
     try {
       const res = await fetch(this.URL, {
         method: "POST",
         headers: STANDARD_HEADERS,
         body: JSON.stringify({ item }),
+
       });
     } catch (err) {
       console.error("Could not create a todo item");

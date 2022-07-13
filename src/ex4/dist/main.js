@@ -1,9 +1,12 @@
+
 import { ItemClient } from "./clients/item_client.js";
+
 
 class Main {
   constructor() {
     this.itemClient = new ItemClient();
   }
+
 
   init = async () => {
     const addItemButton = document.getElementById("add-task");

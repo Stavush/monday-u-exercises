@@ -1,8 +1,11 @@
+
 * {
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   border-radius: 5px;
+
   font-family: "Cabin", sans-serif;
 }
 
@@ -26,12 +29,14 @@ body {
   margin-top: 5%;
 }
 
+
 h1 {
   font-size: 2rem;
   color: #8c7ae6;
   margin-bottom: 10px;
   text-align: center;
 }
+
 
 form {
   display: flex;
@@ -40,8 +45,8 @@ form {
   margin-bottom: 5px;
 }
 
-input {
-  font-family: "Cabin", sans-serif;
+input{
+  font-family: 'Cabin', sans-serif;
   width: 100%;
   border: none;
   background-color: #fff;
@@ -51,7 +56,8 @@ input {
   font-size: 1rem;
 }
 
-button {
+
+button{
   cursor: pointer;
   border: none;
   font-size: 1rem;
@@ -70,6 +76,7 @@ button:active {
   margin-bottom: 5px;
   width: 100%;
 }
+
 
 .tab {
   width: 32%;
@@ -104,11 +111,12 @@ button:active {
 }
 
 .todo-list {
+
   overflow: auto;
   height: 70%;
 }
 
-.task {
+.task{
   display: flex;
   flex: 0;
   font-size: 1rem;
@@ -132,18 +140,20 @@ button:active {
   }
 }
 
+
 .task:hover,
 button:hover {
   background-color: #f9bbcb;
   cursor: pointer;
 }
 
+
 .todo-text {
   width: 100%;
   margin-left: 10px;
 }
 
-.bottom-container {
+.bottom-container{
   margin-top: 5px;
   position: relative;
   display: flex;
@@ -151,17 +161,20 @@ button:hover {
   justify-content: space-between;
 }
 
-#pending {
+
+#pending{
   background-color: #8c7ae6;
   width: fit-content;
   margin-right: 5px;
   padding: 5px;
 }
 
-#clear-all {
+
+#clear-all{
   padding: 5px;
   background-color: #8c7ae6;
 }
+
 
 #clear-all:hover {
   background-color: red;
