@@ -35,7 +35,7 @@ export class PokemonClient{
     getPokemonsTypes = async (name) => {
         try{
             const data = await this.getPokemonByName(name);
-            const types = await data.types;
+            const typeNames = data.types.map(type => type.type.name);
             const type = types.map(e => e.type).map(e => e.name);
             return type.join(" & ");
         } 
