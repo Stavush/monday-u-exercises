@@ -73,7 +73,7 @@ const getDoneTasks = () => {
 const deleteTodo = (todo) => {
     const tasks = fs.readFileSync('todos.txt').toString().split('\n');
     if(todo){
-        let pos = parseInt(todo);
+        const pos = parseInt(todo);
         if(pos>=0 && pos<=tasks.length-1){
             tasks.splice(pos,1);
             fs.writeFileSync('todos.txt', tasks.join('\n'));
