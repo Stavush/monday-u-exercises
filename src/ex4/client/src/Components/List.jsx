@@ -1,26 +1,27 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
+//import ListItem from "./ListItem";
 import ListItemConnector from "../connectors/listItem-connector";
 
-const List = ({ todoList }) => {
-  console.log(todoList);
-  const items = todoList.todos;
+const List = (items) => {
+  const itemsArr = items.items;
+  console.log(itemsArr);
 
-  return (
-    <ul id="list">
-      {items.map((item) => (
-        <ListItemConnector
-          itemID={item.id}
-          itemName={item.itemName}
-          done={item.status}
-        />
-      ))}
-    </ul>
-  );
+  const itemList = useMemo(() => {
+    return itemsArr.map((item) => (
+      <ListItemConnector
+        itemID={item.id}
+        itemName={item.itemName}
+        done={item.status}
+      />
+    ));
+  }, [itemsArr]);
+
+  return <ul id="list">{itemList}</ul>;
 };
 
 List.prototypes = {
-  todoList: PropTypes.array,
+  items: PropTypes.array,
 };
 
 export default List;

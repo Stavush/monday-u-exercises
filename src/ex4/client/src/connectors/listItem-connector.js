@@ -1,6 +1,6 @@
 import { bindActionCreators } from "redux";
 import ListItem from "../Components/ListItem";
-import { deleteItemAction, checkItemAction } from "";
+import { deleteItemAction, checkItemAction } from "../actions/item-actions";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {

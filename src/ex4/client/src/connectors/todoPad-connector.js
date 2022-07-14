@@ -1,16 +1,23 @@
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import TodoPad from "../Components/TodoPad";
-import { getItemsAction, addItemAction } from "../actions/todoPad-action";
-import { getItems } from "../selectors/item-selector";
-import { connect } from "react-redux";
+import {
+  addItemAction,
+  getItemsAction,
+  deleteAllItemsAction,
+} from "../actions/item-actions";
+import { getItems } from "../selectors/items-entities-selector";
 
 const mapStateToProps = (state) => {
-  const itemList = getItems(state);
-  return { itemList };
+  const items = getItems(state);
+  return { items };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ getItemsAction, addItemAction }, dispatch);
+  return bindActionCreators(
+    { getItemsAction, addItemAction, deleteAllItemsAction },
+    dispatch
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoPad);

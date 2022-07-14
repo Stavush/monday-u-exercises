@@ -1,9 +1,15 @@
 import ACTIONS from "./constants";
-import { getItems, postItem, deleteItem, toggleDone } from "../api/item_client";
+import {
+  getItems,
+  deleteAll,
+  postItem,
+  deleteItem,
+  toggleDone,
+} from "../api/item_client";
 
 const get_items = (items) => ({
   type: ACTIONS.GET_ITEMS,
-  items: items,
+  item: { items },
 });
 
 const addItem = (item) => ({
@@ -16,17 +22,22 @@ const delete_item = (item) => ({
   item: item,
 });
 
+const delete_all = () => ({
+  type: ACTIONS.DELETE_ALL,
+});
+
 const checkItem = (item) => ({
   type: ACTIONS.CHECK_ITEM,
   item: item,
 });
 
-export const getItemsAction = (items) => {
-  return (dispatch) => {
-    getItems().then((res) => {
-      dispatch(get_items(res));
-    });
-  };
+export const getItemsAction = () => async (dispatch) => {
+  try {
+    const todos = await getItems();
+    dispatch(get_items(todos));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const addItemAction = (item) => {
@@ -44,5 +55,11 @@ export const deleteItemAction = (item) => {
 export const checkItemAction = (item) => {
   return (dispatch) => {
     toggleDone(item).then((res) => dispatch(checkItem(res)));
+  };
+};
+
+export const deleteAllItemsAction = () => {
+  return (dispatch) => {
+    deleteAll().then((res) => dispatch(delete_all()));
   };
 };

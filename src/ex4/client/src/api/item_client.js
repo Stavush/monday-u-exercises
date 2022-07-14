@@ -3,7 +3,7 @@ const BASE_URL = "http://localhost:3000";
 export async function getItems() {
   const response = await fetch(`${BASE_URL}/items`);
   const todos = await response.json();
-
+  console.log({ todos }); // TEST
   return todos;
 }
 
@@ -17,7 +17,6 @@ export async function postItem(item) {
 }
 
 export async function toggleDone(item) {
-  console.log({ item });
   await fetch(`${BASE_URL}/item/${item.id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

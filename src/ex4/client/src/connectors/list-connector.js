@@ -1,14 +1,16 @@
 import { bindActionCreators } from "redux";
-import ListItem from "../Components/ListItem";
-import { deleteItemAction, checkItemAction } from "";
+import List from "../Components/List";
+import { getItemsAction } from "../actions/item-actions";
 import { connect } from "react-redux";
+import { getItems } from "../selectors/items-entities-selector";
 
 const mapStateToProps = (state) => {
-  return {};
+  const items = getItems(state);
+  return { items };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ deleteItemAction, checkItemAction }, dispatch);
+  return bindActionCreators({ getItemsAction }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListItem);
+export default connect(mapStateToProps, mapDispatchToProps)(List);
