@@ -35,7 +35,7 @@ function ListControlsComponent({ addItem }) {
         onChange={onInputChange}
         onKeyDown={handleEnterPressed}
       />
-      <Button rightIcon={Add} onClick={addItemCallback} />
+      <Button id="add-todo-button" rightIcon={Add} onClick={addItemCallback} />
     </div>
   );
 }
