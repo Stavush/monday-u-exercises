@@ -1,34 +1,42 @@
-const axios = require("axios");
+
+const axios = require("axios").default;
 
 class PokemonClient {
   constructor() {
-    this.API_URL = "https://pokeapi.co/api/v2/pokemon/";
+    this.API_URL = "https://pokeapi.co/api/v2/pokemon";
   }
 
-  async getPokemon(id) {
+  getPokemonById = async (id) => {
     try {
-      const response = await axios.get(`${this.API_URL}${id}`);
-      const pokemon = response.data;
-
-      return pokemon;
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to fetch pokemon");
+      const { data } = await axios.get(`${this.API_URL}/${id}`);
+      return data;
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  async getManyPokemon(ids) {
+  getPokemonByName = async (name) => {
     try {
-      const promises = ids.map((id) => axios.get(`${this.API_URL}${id}`));
-      const responses = await Promise.all(promises);
-
-      const pokemons = responses.map((r) => r.data);
-      return pokemons;
-    } catch (error) {
-      console.error(error);
-      throw new Error("Failed to fetch pokemon");
+      const res = await axios.get(`${this.API_URL}/${name}`);
+      return await res.json();
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
+
+  getPokemonsByIds = async (pokemonIds) => {
+    // gets an array of pokemons IDs and returns pokemons' names
+    let pokemons = [];
+    await Promise.all(
+      pokemonIds.map(async (pokemonId) => {
+        const pokemon = await this.getPokemonById(pokemonId);
+        if (pokemon) {
+          pokemons.push(pokemon);
+        }
+      })
+    );
+    return pokemons;
+  };
 }
 
 module.exports = PokemonClient;

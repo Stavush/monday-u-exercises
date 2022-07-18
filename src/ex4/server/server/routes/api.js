@@ -3,13 +3,12 @@ const router = express.Router();
 const itemManager = require("../services/item_manager");
 
 router.get("/items", async (_, res) => {
-  res.send(await itemManager.getItems());
+  res.status(200).json(await itemManager.getItems());
 });
 
 router.post("/item", async (req, res) => {
-  const { item } = req.body;
-  await itemManager.handleItem(item);
-  res.status(200).json();
+  const item = await itemManager.handleItem(req.body.item);
+  res.status(201).json(item);
 });
 
 router.post("/item/:id", async (req, res) => {
@@ -19,11 +18,6 @@ router.post("/item/:id", async (req, res) => {
 
 router.delete("/item", async (req, res) => {
   await itemManager.deleteItem(req.body.item);
-  res.status(200).json();
-});
-
-router.delete("/item/all", async (req, res) => {
-  await itemManager.deleteAll();
   res.status(200).json();
 });
 
