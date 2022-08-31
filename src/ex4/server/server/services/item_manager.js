@@ -1,5 +1,5 @@
 const PokemonClient = require("../clients/pokemon_client");
-const { Item } = require("../db/models");
+const { Item } = require("../server/db/models");
 
 class ItemManager {
   constructor() {
@@ -13,7 +13,7 @@ class ItemManager {
     return items.map((item) => {
       return {
         id: item.id,
-        itemName: item.itemName,
+        name: item.itemName,
         status: item.status,
       };
     });
@@ -27,27 +27,28 @@ class ItemManager {
       return await this.fetchAndAddManyPokemon(item);
     }
 
-    await this.addItem(item);
+    return await this.addItem(item);
   };
 
   updateItem = async (item) => {
     await Item.update({ status: item.status }, { where: { id: item.id } });
   };
 
-  addItem = async (item) => {
-    await Item.create({ itemName: item, status: false });
+  addItem = async (itemName) => {
+    const item = await Item.create({ itemName });
+    return item;
   };
 
   addPokemonItem = async (pokemon) => {
-    await this.addItem(`Catch ${pokemon.name}`);
+    return await this.addItem(`Catch ${pokemon.name}`);
   };
 
   fetchAndAddPokemon = async (pokemonId) => {
     try {
       const pokemon = await this.pokemonClient.getPokemon(pokemonId);
-      await this.addPokemonItem(pokemon);
+      return await this.addPokemonItem(pokemon);
     } catch (error) {
-      await this.addItem(`Pokemon with ID ${pokemonId} was not found`);
+      return await this.addItem(`Pokemon with ID ${pokemonId} was not found`);
     }
   };
 
@@ -65,18 +66,11 @@ class ItemManager {
     }
   };
 
-  deleteItem = async (itemId) => {
+  deleteItem = async (item) => {
     await Item.destroy({
       where: {
-        id: itemId,
+        id: item.id,
       },
-    });
-  };
-
-  deleteAll = async () => {
-    await Item.destroy({
-      where: {},
-      truncate: true,
     });
   };
 

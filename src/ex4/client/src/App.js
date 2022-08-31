@@ -1,8 +1,12 @@
-import "./style.css";
-import TodoPad from "./Components/TodoPad";
+import TodoAppContainerConnector from "./components/todo-app-container/TodoAppContainerConnector";
+import styles from "./App.module.scss";
 
-const App = () => {
-  return <TodoPad />;
-};
+function App() {
+  return (
+    <div className={styles.container}>
+      <TodoAppContainerConnector />
+    </div>
+  );
+}
 
 export default App;

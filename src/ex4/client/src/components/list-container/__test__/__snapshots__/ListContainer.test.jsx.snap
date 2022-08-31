@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListContainer should render both items (one done and one not) 1`] = `
+<p
+  class="text"
+>
+  Take dog out for a walk
+</p>
+`;
+
+exports[`ListContainer should render both items (one done and one not) 2`] = `
+<p
+  class="text"
+>
+  Do the dishes
+</p>
+`;
