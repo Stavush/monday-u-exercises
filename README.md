@@ -21,3 +21,5 @@ Create a pull request in your forked repository and send to your mentor when it'
 # Solutions
 
 Every friday a new exercise and the solution for previous one will be published
+
+![](https://github.com/Stavush/todo-app-monday-u-exercises/blob/main/todoapp-snapshot.png?raw=true)
